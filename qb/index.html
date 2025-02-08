@@ -1,0 +1,165 @@
+<!-- 此社工库由我轩白独家打造，全网最大社工库密码泄露查询，有需要请联系我QQ：2594709540@qq.com-->
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+     <meta charset="UTF-8">
+     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+     <title>轩白社工库 | 密码泄露查询</title>
+     <style>
+         body {
+             font-family: 'Arial', sans-serif;
+             margin: 0;
+             padding: 0;
+             background: linear-gradient(135deg, #f4f4f4, #e9ecef);
+             color: #333;
+         }
+         .container {
+             max-width: 600px;
+             margin: 50px auto;
+             padding: 20px;
+             background-color: #fff;
+             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+             border-radius: 10px;
+             transition: box-shadow 0.3s ease;
+         }
+         .container:hover {
+             box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+         }
+         .title {
+             text-align: center;
+             margin-bottom: 20px;
+             color: #007bff;
+             font-size: 1.5em;
+         }
+         .input-group {
+             margin-bottom: 15px;
+         }
+         .input-group label {
+             display: block;
+             margin-bottom: 5px;
+             color: #555;
+         }
+         .input-group input {
+             width: 100%;
+             padding: 10px;
+             border: 1px solid #ddd;
+             border-radius: 5px;
+             transition: border-color 0.3s ease;
+         }
+         .input-group input:focus {
+             outline: none;
+             border-color: #007bff;
+         }
+         .input-group button {
+             width: 100%;
+             padding: 10px;
+             background-color: #007bff;
+             color: white;
+             border: none;
+             border-radius: 5px;
+             cursor: pointer;
+             transition: background-color 0.3s ease;
+         }
+         .input-group button:hover {
+             background-color: #0056b3;
+         }
+         .result-box {
+             margin-top: 20px;
+             padding: 15px;
+             background-color: #f9f9f9;
+             border: 1px solid #ddd;
+             border-radius: 8px;
+         }
+         /* 媒体查询，针对小屏幕设备 */
+         @media (max-width: 768px) {
+             .container {
+                 padding: 10px;
+             }
+             .input-group input, .input-group button {
+                 padding: 8px;
+             }
+             .title {
+                 font-size: 1.5em;
+             }
+         }
+     </style>
+</head>
+<body>
+     <div class="container">
+         <div class="title">轩白社工库 | 密码泄露查询</div>
+         <div class="input-group">
+             <label for="inputQuery">请输入查询内容：</label>
+             <input type="text" id="inputQuery" placeholder="请输入查询内容">
+             <button onclick="performQuery()">查询</button>
+         </div>
+         <div id="result" class="result-box"></div>
+                   
+
+     </div>
+     <script>
+         async function performQuery() {
+             // 清空之前的查询结果
+             document.getElementById('result').innerHTML = '<p>查询结果：</p>';
+
+             const queryContent = document.getElementById('inputQuery').value;
+             try {
+                 // 这里使用fetch API直接调用外部API
+                 const responses = await Promise.all([
+                     fetch(`https://api.xywlapi.cc/qqapi?qq=${queryContent}`),
+                     fetch(`https://api.xywlapi.cc/qqlol?qq=${queryContent}`),
+                     fetch(`https://api.xywlapi.cc/qqlm?qq=${queryContent}`),
+                     fetch(`https://api.xywlapi.cc/wbphone?phone=${queryContent}`),
+                     fetch(`https://api.xywlapi.cc/qqphone?phone=${queryContent}`),
+                     fetch(`https://api.xywlapi.cc/wbapi?id=${queryContent}`),
+                    
+                 ]);
+
+                 // 处理响应
+                 const results = await Promise.all(responses.map(response => response.json()));
+                 const uniqueResults = new Set(); // 用于去重
+
+                 results.forEach((result, index) => {
+                     if (result.status === 200 && result.message === "查询成功") {
+                         // 假设每个API返回的数据结构是 { status: ..., message: ..., qq: ..., phone: ..., phonediqu: ... }
+                         if (result.qq) {
+                             uniqueResults.add(`QQ: ${result.qq}`);
+                         }
+                         if (result.phone) {
+                             uniqueResults.add(`手机号: ${result.phone}`);
+                         }
+                         if (result.phonediqu) {
+                             uniqueResults.add(`地区: ${result.phonediqu}`);
+                         }
+                         if (result.id) {
+                             uniqueResults.add(`微博ID: ${result.id}`);
+                         }
+                         if (result.name) {
+                             uniqueResults.add(`LOL游戏名: ${result.name}`);
+                         }
+                         if (result.daqu) {
+                             uniqueResults.add(`LOL大区: ${result.daqu}`);
+                         }
+                         if (result.qqlm) {
+                             uniqueResults.add(`QQ老密: ${result.qqlm}`);
+                         }
+                     }
+                 });
+
+                 // 将去重后的结果添加到页面上
+                 uniqueResults.forEach(result => {
+                     document.getElementById('result').innerHTML += `<p>${result}</p>`;
+                 });
+             } catch (error) {
+                 document.getElementById('result').innerHTML += '<p>查询失败，请稍后再试。</p>';
+             }
+         }
+         
+                   function goToTwoFactorCheck() {
+              // 这里填写二要素校验页面的URL
+              window.location.href = 'eys.php';
+          }
+
+     </script>
+</body>
+
+</html>
